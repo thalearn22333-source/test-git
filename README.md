@@ -1,2 +1,581 @@
-# test-git
-This is the repository of test git
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="./output.css" rel="stylesheet" />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .carousel-container {
+        perspective: 1000px;
+        touch-action: pan-y pinch-zoom;
+      }
+
+      .carousel-track {
+        transform-style: preserve-3d;
+        transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+      }
+
+      .carousel-item {
+        backface-visibility: hidden;
+        transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+      }
+
+      .carousel-item.active {
+        opacity: 1;
+        transform: scale(1) translateZ(0);
+      }
+
+      @media (max-width: 640px) {
+        .carousel-item.prev {
+          opacity: 0;
+          transform: scale(0.8) translateX(-50%) translateZ(-100px);
+        }
+
+        .carousel-item.next {
+          opacity: 0;
+          transform: scale(0.8) translateX(50%) translateZ(-100px);
+        }
+      }
+
+      @media (min-width: 641px) {
+        .carousel-item.prev {
+          opacity: 0.7;
+          transform: scale(0.9) translateX(-100%) translateZ(-100px);
+        }
+
+        .carousel-item.next {
+          opacity: 0.7;
+          transform: scale(0.9) translateX(100%) translateZ(-100px);
+        }
+      }
+
+      .carousel-item.hidden {
+        opacity: 0;
+        transform: scale(0.8) translateZ(-200px);
+      }
+
+      .nav-button {
+        transition: all 0.3s;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+      }
+
+      @media (hover: hover) {
+        .nav-button:hover {
+          background: rgba(255, 255, 255, 0.2);
+          transform: scale(1.1);
+        }
+      }
+
+      .nav-button:active {
+        transform: scale(0.95);
+      }
+
+      .progress-bar {
+        transition: width 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Include this script tag or install `@tailwindplus/elements` via npm: -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script> -->
+    <div class="bg-gray-900 to-0 sticky z-50">
+      <header class="top-0 inset-x-0 sticky z-50 border-whitesmoke">
+        <nav
+          aria-label="Global"
+          class="flex items-center justify-between p-6 lg:px-8"
+        >
+          <div class="flex lg:flex-1">
+            <a href="#" class="-m-1.5 p-1.5">
+              <span class="sr-only">Our logo</span>
+              <img
+                src="https://i.pinimg.com/736x/74/ef/00/74ef005a4cd571ef2f8971791b6bfc98.jpg"
+                alt="logo"
+          
+                class="h-8 w-auto rounded-full"
+              />
+            </a>
+          </div>
+          <div class="flex lg:hidden">
+            <button
+              type="button"
+              command="show-modal"
+              commandfor="mobile-menu"
+              class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-200"
+            >
+              <span class="sr-only">Open main menu</span>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                data-slot="icon"
+                aria-hidden="true"
+                class="size-6"
+              >
+                <path
+                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
+          <div class="hidden lg:flex lg:gap-x-12">
+            <a href="#" class="text-sm/6 font-semibold text-white">Places</a>
+            <a href="#" class="text-sm/6 font-semibold text-white">About</a>
+            <a href="#" class="text-sm/6 font-semibold text-white"
+              >Contact Us</a
+            >
+          </div>
+          <div class="hidden lg:flex lg:flex-1 lg:justify-end">
+            <a
+              href="#"
+              class="text-sm/6 bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded"
+              >Log in <span aria-hidden="true">&rarr;</span></a
+            >
+          </div>
+        </nav>
+        <el-dialog>
+          <dialog id="mobile-menu" class="backdrop:bg-transparent lg:hidden">
+            <div tabindex="0" class="fixed inset-0 focus:outline-none">
+              <el-dialog-panel
+                class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-gray-900 p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-100/10"
+              >
+                <div class="flex items-center justify-between">
+                  <a href="#" class="-m-1.5 p-1.5">
+                    <span class="sr-only">Our logo</span>
+                    <img
+                      src="https://i.pinimg.com/736x/74/ef/00/74ef005a4cd571ef2f8971791b6bfc98.jpg"
+                      alt=""
+                      class="h-8 w-auto rounded-full"
+                    />
+                  </a>
+                  <button
+                    type="button"
+                    command="close"
+                    commandfor="mobile-menu"
+                    class="-m-2.5 rounded-md p-2.5 text-gray-200"
+                  >
+                    <span class="sr-only">Close menu</span>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      data-slot="icon"
+                      aria-hidden="true"
+                      class="size-6"
+                    >
+                      <path
+                        d="M6 18 18 6M6 6l12 12"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </button>
+                </div>
+                <div class="mt-6 flow-root">
+                  <div class="-my-6 divide-y divide-white/10">
+                    <div class="space-y-2 py-6">
+                      <a
+                        href="#"
+                        class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5"
+                        >Places</a
+                      >
+                      <a
+                        href="#"
+                        class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5"
+                        >About</a
+                      >
+                      <a
+                        href="#"
+                        class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5"
+                        >Contact Us</a
+                      >
+                    </div>
+                    <div class="py-6">
+                      <a
+                        href="#"
+                        class="text-sm/6 font-semibold text-white bg-blue-500 hover:bg-blue-700 py-2 px-4 rounded"
+                        >Log in <span aria-hidden="true">&rarr;</span></a
+                      >
+                    </div>
+                  </div>
+                </div>
+              </el-dialog-panel>
+            </div>
+          </dialog>
+        </el-dialog>
+      </header>
+    </div>
+    <!-- Carousel -->
+    <main>
+      <div class="fixed inset-0 -z-10">
+        <div
+          class="absolute inset-0 bg-gradient-to-br from-violet-900/20 via-purple-900/20 to-fuchsia-900/20"
+        ></div>
+        <div
+          class="absolute top-1/4 left-1/4 w-48 h-48 sm:w-96 sm:h-96 bg-violet-500/10 rounded-full filter blur-3xl"
+        ></div>
+        <div
+          class="absolute bottom-1/4 right-1/4 w-48 h-48 sm:w-96 sm:h-96 bg-fuchsia-500/10 rounded-full filter blur-3xl"
+        ></div>
+      </div>
+
+      <!-- Main container -->
+      <div class="w-full max-w-6xl mx-auto mt-[80px]">
+        <!-- Carousel container -->
+        <div class="carousel-container relative">
+          <!-- Navigation buttons -->
+          <button
+            class="nav-button absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center z-20 text-white touch-manipulation"
+            onclick="prevSlide()"
+            title="Previous slide"
+          >
+            <svg
+              class="w-5 h-5 sm:w-6 sm:h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 19l-7-7 7-7"
+              ></path>
+            </svg>
+          </button>
+
+          <button
+            class="nav-button absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center z-20 text-white touch-manipulation"
+            onclick="nextSlide()"
+            title="Next slide"
+          >
+            <svg
+              class="w-5 h-5 sm:w-6 sm:h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5l7 7-7 7"
+              ></path>
+            </svg>
+          </button>
+
+          <!-- Carousel track -->
+          <div
+            class="carousel-track relative h-[400px] sm:h-[500px] md:h-[600px] overflow-hidden"
+          >
+            <!-- Carousel items -->
+            <div
+              class="carousel-item active absolute top-0 left-0 w-full h-full"
+            >
+              <div class="w-full h-full p-4 sm:p-8">
+                <div
+                  class="w-full h-full rounded-xl sm:rounded-2xl overflow-hidden relative group"
+                >
+                  <img
+                    src="https://i.pinimg.com/1200x/ed/bf/73/edbf7353393cc3d039792dc89a0dd4b6.jpg"
+                    alt="Angkor Wat"
+                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  
+                    <h3
+                      class="text-white text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-3"
+                    >
+                      Digital Prism
+                    </h3>
+                    <p
+                      class="text-gray-200 text-sm sm:text-base md:text-lg max-w-2xl"
+                    >
+                      Where geometry meets art in a stunning display of light
+                      and form.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="carousel-item next absolute top-0 left-0 w-full h-full">
+              <div class="w-full h-full p-4 sm:p-8">
+                <div
+                  class="w-full h-full rounded-xl sm:rounded-2xl overflow-hidden relative group"
+                >
+                  <img
+                    src="https://i.pinimg.com/1200x/a5/6d/e9/a56de929defc9a01c03f6a82106511c1.jpg"
+                    alt="Bayon Temple"
+                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div
+                    class="absolute inset-0 bg-gradient-to-br from-fuchsia-500/40 to-pink-500/40 mix-blend-overlay"
+                  ></div>
+                  <div
+                    class="absolute inset-x-0 bottom-0 p-4 sm:p-8 bg-gradient-to-t from-black/80 via-black/40 to-transparent"
+                  >
+                    <h3
+                      class="text-white text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-3"
+                    >
+                      Tech Haven
+                    </h3>
+                    <p
+                      class="text-gray-200 text-sm sm:text-base md:text-lg max-w-2xl"
+                    >
+                      Immerse yourself in the cutting edge of technology and
+                      innovation.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="carousel-item hidden absolute top-0 left-0 w-full h-full"
+            >
+              <div class="w-full h-full p-4 sm:p-8">
+                <div
+                  class="w-full h-full rounded-xl sm:rounded-2xl overflow-hidden relative group"
+                >
+                  <img
+                    src="https://i.pinimg.com/736x/6b/98/2c/6b982c06bc705396c2812829f2504f92.jpg"
+                    alt="Ta Prohm"
+                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div
+                    class="absolute inset-0 bg-gradient-to-br from-pink-500/40 to-rose-500/40 mix-blend-overlay"
+                  ></div>
+                  <div
+                    class="absolute inset-x-0 bottom-0 p-4 sm:p-8 bg-gradient-to-t from-black/80 via-black/40 to-transparent"
+                  >
+                    <h3
+                      class="text-white text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-3"
+                    >
+                      Neural Dreams
+                    </h3>
+                    <p
+                      class="text-gray-200 text-sm sm:text-base md:text-lg max-w-2xl"
+                    >
+                      AI-generated masterpieces that blur the line between human
+                      and machine creativity.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Indicators -->
+          <div
+            class="absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2 flex gap-1 sm:gap-2 z-20"
+          >
+            <button
+              class="w-8 sm:w-12 h-1 sm:h-1.5 rounded-full bg-white/40 hover:bg-white/60 transition-colors"
+              title="Go to slide 1"
+            ></button>
+            <button
+              class="w-8 sm:w-12 h-1 sm:h-1.5 rounded-full bg-white/20 hover:bg-white/60 transition-colors"
+              title="Go to slide 2"
+            ></button>
+            <button
+              class="w-8 sm:w-12 h-1 sm:h-1.5 rounded-full bg-white/20 hover:bg-white/60 transition-colors"
+              title="Go to slide 3"
+            ></button>
+          </div>
+        </div>
+      </div>
+      <!-- Card display popular places -->
+       <section class="container grid sm:grid-cols-2 grid-cols-2 lg:grid-cols-3 px-8 gap-4"> 
+        <div>
+        <img class="mb-7 rounded-xl hover:scale-95 duration-100" src="https://i.pinimg.com/736x/7a/56/2e/7a562ecc26f31c61d10b2b5139a0b9df.jpg ">
+        <div>
+          <h3 class="text-[#0A2025] dark:text-white text-2xl font-bold font-['Roboto']">National Museum</h3>
+          <p class="mt-5 mb-8 text-[#0A2025] dark:text-white text-sm font-normal font-['Roboto']">Welcome to Cambodia</p><button class="text-[#3e9d26] text-sm font-semibold font-['Roboto']">Visit</button>
+        </div>
+      </div>
+    <div>
+        <img class="mb-7 rounded-xl hover:scale-95 duration-100" src="https://i.pinimg.com/1200x/f9/50/62/f9506262a726202b68d843fa942fbd52.jpg ">
+        <div>
+          <h3 class="text-[#0A2025] dark:text-white text-2xl font-bold font-['Roboto']">Royal palace</h3>
+          <p class="mt-5 mb-8 text-[#0A2025] dark:text-white text-sm font-normal font-['Roboto']">Welcome to Cambodia</p><button class="text-[#3e9d26] text-sm font-semibold font-['Roboto']">Visit</button>
+        </div>
+      </div>
+      <div>
+        <img class="mb-7 rounded-xl hover:scale-95 duration-100" src="https://i.pinimg.com/1200x/d2/73/94/d27394904aeed7d6aa140cb7c88643a0.jpg ">
+        <div>
+          <h3 class="text-[#0A2025] dark:text-white text-2xl font-bold font-['Roboto']"> Beach</h3>
+          <p class="mt-5 mb-8 text-[#0A2025] dark:text-white text-sm font-normal font-['Roboto']">Welcome to Cambodia</p><button class="text-[#3e9d26] text-sm font-semibold font-['Roboto']">Visit</button>
+        </div>
+      </div>
+    </section>
+</main>
+ <!-- Footer -->
+    <footer class="bg-white shadow-lg mt-auto">
+        <div class="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            
+            <!-- Column 1: Company Info -->
+            <div>
+                <h3 class="text-xl font-semibold text-gray-800">Company</h3>
+                <p class="text-gray-500 mt-3">Delivering quality products with a seamless shopping experience.</p>
+                <p class="text-gray-500 mt-2">© 2024 All rights reserved.</p>
+            </div>
+
+            <!-- Column 2: Quick Links -->
+            <div>
+                <h3 class="text-xl font-semibold text-gray-800">Quick Links</h3>
+                <ul class="mt-3 space-y-2">
+                    <li><a href="#" class="text-gray-500 hover:text-indigo-600 transition">Home</a></li>
+                    <li><a href="#" class="text-gray-500 hover:text-indigo-600 transition">Shop</a></li>
+                    <li><a href="#" class="text-gray-500 hover:text-indigo-600 transition">About Us</a></li>
+                    <li><a href="#" class="text-gray-500 hover:text-indigo-600 transition">Contact</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 3: Customer Service -->
+            <div>
+                <h3 class="text-xl font-semibold text-gray-800">Customer Service</h3>
+                <ul class="mt-3 space-y-2">
+                    <li><a href="#" class="text-gray-500 hover:text-indigo-600 transition">FAQs</a></li>
+                    <li><a href="#" class="text-gray-500 hover:text-indigo-600 transition">Shipping & Returns</a></li>
+                    <li><a href="#" class="text-gray-500 hover:text-indigo-600 transition">Privacy Policy</a></li>
+                    <li><a href="#" class="text-gray-500 hover:text-indigo-600 transition">Terms & Conditions</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 4: Newsletter Subscription -->
+            <div>
+                <h3 class="text-xl font-semibold text-gray-800">Stay Updated</h3>
+                <p class="text-gray-500 mt-3">Subscribe to our newsletter for exclusive deals and updates.</p>
+                <div class="mt-4 flex">
+                    <input type="email" placeholder="Enter your email" class="w-full px-4 py-3 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-1">
+                    <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-3 rounded-r-lg transition">
+                        Subscribe
+                    </button>
+                </div>
+            </div>
+            
+        </div>
+        
+        <!-- Bottom Bar -->
+        <div class="border-t border-gray-200 mt-8 py-4 text-center text-gray-500 text-sm">
+            Made with ❤️ by me       </div>
+    </footer>
+      <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll(".carousel-item");
+        const indicators = document.querySelectorAll(
+          ".bottom-2 button, .bottom-4 button"
+        );
+        const progressBar = document.querySelector(".progress-bar");
+        let autoAdvanceTimer;
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const carousel = document.querySelector(".carousel-track");
+
+        // Add touch events for swipe
+        carousel.addEventListener(
+          "touchstart",
+          (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+          },
+          { passive: true }
+        );
+
+        carousel.addEventListener(
+          "touchend",
+          (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+          },
+          { passive: true }
+        );
+
+        function handleSwipe() {
+          const swipeThreshold = 50;
+          const diff = touchStartX - touchEndX;
+
+          if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0) {
+              nextSlide();
+            } else {
+              prevSlide();
+            }
+          }
+        }
+
+        function updateSlides() {
+          slides.forEach((slide, index) => {
+            slide.className =
+              "carousel-item absolute top-0 left-0 w-full h-full";
+            if (index === currentSlide) {
+              slide.classList.add("active");
+            } else if (index === (currentSlide + 1) % slides.length) {
+              slide.classList.add("next");
+            } else if (
+              index ===
+              (currentSlide - 1 + slides.length) % slides.length
+            ) {
+              slide.classList.add("prev");
+            } else {
+              slide.classList.add("hidden");
+            }
+          });
+
+          // Update indicators
+          indicators.forEach((indicator, index) => {
+            indicator.className = `w-8 sm:w-12 h-1 sm:h-1.5 rounded-full transition-colors ${
+              index === currentSlide ? "bg-white/40" : "bg-white/20"
+            } hover:bg-white/60`;
+          });
+
+          // Update progress bar
+          progressBar.style.width = `${
+            ((currentSlide + 1) / slides.length) * 100
+          }%`;
+        }
+
+        function resetAutoAdvance() {
+          clearInterval(autoAdvanceTimer);
+          autoAdvanceTimer = setInterval(nextSlide, 5000);
+        }
+
+        function nextSlide() {
+          currentSlide = (currentSlide + 1) % slides.length;
+          updateSlides();
+          resetAutoAdvance();
+        }
+
+        function prevSlide() {
+          currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+          updateSlides();
+          resetAutoAdvance();
+        }
+
+        // Add click handlers to indicators
+        indicators.forEach((indicator, index) => {
+          indicator.addEventListener("click", () => {
+            currentSlide = index;
+            updateSlides();
+            resetAutoAdvance();
+          });
+        });
+
+        // Initialize auto advance
+        resetAutoAdvance();
+
+        // Initialize slides
+        updateSlides();
+      </script>
+    
+  </body>
+</html>
